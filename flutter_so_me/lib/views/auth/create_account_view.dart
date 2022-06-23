@@ -193,7 +193,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                           if (isCreated) {
                             //new user successfully created
                             Fluttertoast.showToast(
-                                msg: "Welcome!, $name",
+                                msg: "Welcome $name",
                                 toastLength: Toast.LENGTH_LONG,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
