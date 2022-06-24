@@ -1,23 +1,20 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_so_me/services/file_upload_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_so_me/logs/log.dart';
 
-class PostManager with ChangeNotifier {
+class ChatManager with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static final FirebaseFirestore _firebaseFirestore =
       FirebaseFirestore.instance;
 
-  final CollectionReference<Map<String, dynamic>> _postCollection =
-      _firebaseFirestore.collection("posts");
+  final CollectionReference<Map<String, dynamic>> _chatroomCollection =
+      _firebaseFirestore.collection("chatrooms");
   final CollectionReference<Map<String, dynamic>> _userCollection =
       _firebaseFirestore.collection("users");
-
-  final FileUploadService _fileUploadService = FileUploadService();
 
   String _message = '';
 
@@ -30,44 +27,39 @@ class PostManager with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> submitPost({
-    String? description,
-    required File postImage,
-  }) async {
+  Future<bool> submitChat(
+      {required String? message, required String? receiverUid}) async {
     bool isSubmitted = false;
 
     String userUid = _firebaseAuth.currentUser!.uid;
     FieldValue timeStamp = FieldValue.serverTimestamp();
 
-    String? pictureUrl =
-        await _fileUploadService.uploadPostFile(file: postImage);
-
-    if (pictureUrl != null) {
-      await _postCollection.doc().set({
-        "description": description,
-        "image_url": pictureUrl,
-        "createdAt": timeStamp,
-        "user_uid": userUid
+    if (message != null) {
+      await _chatroomCollection.doc().set({
+        "user1_uid": userUid,
+        "user2_uid": receiverUid,
+        "timestamp": timeStamp,
+        "message": message
       }).then((_) {
         isSubmitted = true;
-        setMessage('Post submitted successfully!');
+        setMessage('Message sent');
       }).catchError((onError) {
         isSubmitted = false;
         setMessage('$onError');
       }).timeout(const Duration(seconds: 60), onTimeout: () {
         isSubmitted = false;
-        setMessage('Please check your internet connection.');
+        setMessage('Please check your internet connection');
       });
     } else {
       isSubmitted = false;
-      setMessage('Image upload failed!');
+      setMessage('Message failed to send');
     }
     return isSubmitted;
   }
 
-  /// get all post from the db
-  Stream<QuerySnapshot<Map<String, dynamic>?>> getAllPosts() {
-    return _postCollection.orderBy('createdAt', descending: true).snapshots();
+  /// Get all chats from the db
+  Stream<QuerySnapshot<Map<String, dynamic>?>> getAllChats() {
+    return _chatroomCollection.snapshots();
   }
 
   ///get user info from db

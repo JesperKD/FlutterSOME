@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_so_me/logs/log.dart';
+
 class AuthManager with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static final FirebaseFirestore _firebaseFirestore =
@@ -20,6 +22,7 @@ class AuthManager with ChangeNotifier {
   setMessage(String message) {
     //setter
     _message = message;
+    log(message);
     notifyListeners();
   }
 

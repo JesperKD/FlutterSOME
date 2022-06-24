@@ -16,11 +16,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   int _currentIndex = 0;
-  final List<Widget> _views = [
-    TimelineView(),
-    const ChatView(),
-    const ProfileView()
-  ];
+  final List<Widget> _views = [TimelineView(), ChatView(), const ProfileView()];
 
   @override
   void initState() {
