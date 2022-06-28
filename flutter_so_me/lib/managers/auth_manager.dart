@@ -14,7 +14,9 @@ class AuthManager with ChangeNotifier {
   final FileUploadService _fileUploadService = FileUploadService();
   String _message = '';
   bool _isLoading = false;
-  CollectionReference userCollection = _firebaseFirestore.collection("users");
+
+  final CollectionReference<Map<String, dynamic>> _userCollection =
+      _firebaseFirestore.collection("users");
 
   String get message => _message; //getter
   bool get isLoading => _isLoading; //getter
@@ -47,7 +49,7 @@ class AuthManager with ChangeNotifier {
           file: imageFile, userUid: userCredential.user!.uid);
 
       if (photoUrl != null) {
-        await userCollection.doc(userCredential.user!.uid).set({
+        await _userCollection.doc(userCredential.user!.uid).set({
           "name": name,
           "email": email,
           "picture": photoUrl,
@@ -106,5 +108,21 @@ class AuthManager with ChangeNotifier {
       isSent = false;
     });
     return isSent;
+  }
+
+  ///get user info from db
+  Future<Map<String, dynamic>?> getUserInfo(String userUid) async {
+    Map<String, dynamic>? userData;
+    await _userCollection
+        .doc(userUid)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> doc) {
+      if (doc.exists) {
+        userData = doc.data();
+      } else {
+        userData = null;
+      }
+    });
+    return userData;
   }
 }

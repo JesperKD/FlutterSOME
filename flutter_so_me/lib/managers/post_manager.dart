@@ -30,6 +30,7 @@ class PostManager with ChangeNotifier {
     notifyListeners();
   }
 
+  /// submit a post to the db
   Future<bool> submitPost({
     String? description,
     required File postImage,

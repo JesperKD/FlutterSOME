@@ -12,7 +12,7 @@ class ChatManager with ChangeNotifier {
       FirebaseFirestore.instance;
 
   final CollectionReference<Map<String, dynamic>> _chatroomCollection =
-      _firebaseFirestore.collection("chatrooms");
+      _firebaseFirestore.collection("Chatrooms");
   final CollectionReference<Map<String, dynamic>> _userCollection =
       _firebaseFirestore.collection("users");
 
@@ -27,8 +27,7 @@ class ChatManager with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> submitChat(
-      {required String? message, required String? receiverUid}) async {
+  Future<bool> submitChat({required String? message}) async {
     bool isSubmitted = false;
 
     String userUid = _firebaseAuth.currentUser!.uid;
@@ -36,8 +35,7 @@ class ChatManager with ChangeNotifier {
 
     if (message != null) {
       await _chatroomCollection.doc().set({
-        "user1_uid": userUid,
-        "user2_uid": receiverUid,
+        "user_uid": userUid,
         "timestamp": timeStamp,
         "message": message
       }).then((_) {
@@ -57,9 +55,15 @@ class ChatManager with ChangeNotifier {
     return isSubmitted;
   }
 
+  String getCurrentUser() {
+    return _firebaseAuth.currentUser!.uid;
+  }
+
   /// Get all chats from the db
   Stream<QuerySnapshot<Map<String, dynamic>?>> getAllChats() {
-    return _chatroomCollection.snapshots();
+    var data =
+        _chatroomCollection.orderBy('timestamp', descending: true).snapshots();
+    return data;
   }
 
   ///get user info from db
