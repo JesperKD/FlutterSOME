@@ -10,7 +10,7 @@ String encryptData(String text) {
   return encrypted_data.base64;
 }
 
-//dycrypt
+//decrypt
 String decryptData(String text) {
   final e = Encrypter(AES(key, mode: AESMode.cbc));
   final decrypted_data = e.decrypt(Encrypted.fromBase64(text), iv: iv);

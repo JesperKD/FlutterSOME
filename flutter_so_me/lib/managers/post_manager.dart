@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_so_me/services/file_upload_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_so_me/managers/encryption_manager.dart' as encrypter;
 import 'package:flutter_so_me/logs/log.dart';
 
 class PostManager with ChangeNotifier {
@@ -45,10 +45,10 @@ class PostManager with ChangeNotifier {
 
     if (pictureUrl != null) {
       await _postCollection.doc().set({
-        "description": description,
-        "image_url": pictureUrl,
+        "description": encrypter.encryptData(description!),
+        "image_url": encrypter.encryptData(pictureUrl),
         "createdAt": timeStamp,
-        "user_uid": userUid
+        "user_uid": encrypter.encryptData(userUid)
       }).then((_) {
         isSubmitted = true;
         setMessage('Post submitted successfully!');

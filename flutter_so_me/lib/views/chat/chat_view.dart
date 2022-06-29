@@ -72,26 +72,19 @@ class _ChatViewState extends State<ChatView> {
                             return const ListTile();
                           }
                           return ListTile(
-                            contentPadding: const EdgeInsets.all(0),
-                            leading: CircleAvatar(
-                              radius: 30,
-                              backgroundImage:
-                                  NetworkImage(userSnapshot.data!['picture']!),
-                            ),
-                            title: Text(userSnapshot.data!['name'],
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1!
-                                    .copyWith(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600)),
-                            trailing: IconButton(
-                                onPressed: null,
-                                icon: Icon(
-                                  Icons.more_horiz,
-                                  color: Theme.of(context).iconTheme.color,
-                                )),
-                          );
+                              contentPadding: const EdgeInsets.all(0),
+                              leading: CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(
+                                    userSnapshot.data!['picture']!),
+                              ),
+                              title: Text(userSnapshot.data!['name'],
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600)));
                         }),
                     snapshot.data!.docs[index].data()!['message']!.isEmpty
                         ? const SizedBox.shrink()
@@ -109,11 +102,12 @@ class _ChatViewState extends State<ChatView> {
                               color: Colors.white,
                             ),
                           ),
-                    DateChip(
-                        date: DateTime.fromMicrosecondsSinceEpoch(snapshot
+                    Text(timeago.format(
+                        DateTime.fromMicrosecondsSinceEpoch(snapshot
                             .data!.docs[index]
                             .data()!['timestamp']
-                            .microsecondsSinceEpoch)),
+                            .microsecondsSinceEpoch),
+                        allowFromNow: true)),
                   ]);
                 },
                 separatorBuilder: (context, index) => const Divider(),

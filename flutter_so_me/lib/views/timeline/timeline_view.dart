@@ -4,6 +4,7 @@ import 'package:flutter_so_me/views/timeline/create_post_view.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:unicons/unicons.dart';
+import 'package:flutter_so_me/managers/encryption_manager.dart' as encrypter;
 
 class TimelineView extends StatelessWidget {
   TimelineView({Key? key}) : super(key: key);
@@ -53,8 +54,9 @@ class TimelineView extends StatelessWidget {
                         children: [
                           StreamBuilder<Map<String, dynamic>?>(
                               stream: _postManager
-                                  .getUserInfo(snapshot.data!.docs[index]
-                                      .data()!['user_uid'])
+                                  .getUserInfo(encrypter.decryptData(snapshot
+                                      .data!.docs[index]
+                                      .data()!['user_uid']))
                                   .asStream(),
                               builder: (context, userSnapshot) {
                                 if (userSnapshot.connectionState ==
@@ -110,14 +112,16 @@ class TimelineView extends StatelessWidget {
                                   .isEmpty
                               ? const SizedBox.shrink()
                               : Text(
-                                  snapshot.data!.docs[index]
-                                      .data()!['description']!,
+                                  encrypter.decryptData(snapshot
+                                      .data!.docs[index]
+                                      .data()!['description']!),
                                   textAlign: TextAlign.left,
                                 ),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(
-                              snapshot.data!.docs[index].data()!['image_url']!,
+                              encrypter.decryptData(snapshot.data!.docs[index]
+                                  .data()!['image_url']!),
                               height: 200,
                               width: MediaQuery.of(context).size.width,
                               fit: BoxFit.cover,
