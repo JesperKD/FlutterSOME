@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_so_me/logs/log.dart';
+import 'package:flutter_so_me/managers/encryption_manager.dart' as encrypter;
 
 class ChatManager with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -35,9 +36,9 @@ class ChatManager with ChangeNotifier {
 
     if (message != null) {
       await _chatroomCollection.doc().set({
-        "user_uid": userUid,
-        "timestamp": timeStamp,
-        "message": message
+        "user_uid": encrypter.encryptData(userUid),
+        "timestamp": encrypter.encryptData(timeStamp.toString()),
+        "message": encrypter.encryptData(message)
       }).then((_) {
         isSubmitted = true;
         setMessage('Message sent');
@@ -61,8 +62,7 @@ class ChatManager with ChangeNotifier {
 
   /// Get all chats from the db
   Stream<QuerySnapshot<Map<String, dynamic>?>> getAllChats() {
-    var data =
-        _chatroomCollection.orderBy('timestamp', descending: true).snapshots();
+    var data = _chatroomCollection.snapshots();
     return data;
   }
 
