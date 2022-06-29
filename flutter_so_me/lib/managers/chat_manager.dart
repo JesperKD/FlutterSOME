@@ -37,7 +37,7 @@ class ChatManager with ChangeNotifier {
     if (message != null) {
       await _chatroomCollection.doc().set({
         "user_uid": encrypter.encryptData(userUid),
-        "timestamp": encrypter.encryptData(timeStamp.toString()),
+        "timestamp": timeStamp,
         "message": encrypter.encryptData(message)
       }).then((_) {
         isSubmitted = true;
@@ -62,7 +62,8 @@ class ChatManager with ChangeNotifier {
 
   /// Get all chats from the db
   Stream<QuerySnapshot<Map<String, dynamic>?>> getAllChats() {
-    var data = _chatroomCollection.snapshots();
+    var data =
+        _chatroomCollection.orderBy('timestamp', descending: true).snapshots();
     return data;
   }
 

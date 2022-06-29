@@ -42,6 +42,7 @@ class _CreateChatViewState extends State<CreateChatView> {
               onSubmitted: (value) async {
                 await _chatManager.submitChat(
                     message: textEditingController.text);
+                MaterialPageRoute(builder: (_) => const CreateChatView());
               },
             )),
           ]),

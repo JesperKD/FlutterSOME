@@ -109,6 +109,11 @@ class _ChatViewState extends State<ChatView> {
                               color: Colors.white,
                             ),
                           ),
+                    DateChip(
+                        date: DateTime.fromMicrosecondsSinceEpoch(snapshot
+                            .data!.docs[index]
+                            .data()!['timestamp']
+                            .microsecondsSinceEpoch)),
                   ]);
                 },
                 separatorBuilder: (context, index) => const Divider(),
