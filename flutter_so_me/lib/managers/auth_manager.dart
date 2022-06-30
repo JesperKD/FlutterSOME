@@ -4,7 +4,7 @@ import 'package:flutter_so_me/services/file_upload_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_so_me/managers/encryption_manager.dart' as encrypter;
 import 'package:flutter_so_me/logs/log.dart';
 
 class AuthManager with ChangeNotifier {
@@ -50,9 +50,9 @@ class AuthManager with ChangeNotifier {
 
       if (photoUrl != null) {
         await _userCollection.doc(userCredential.user!.uid).set({
-          "name": name,
-          "email": email,
-          "picture": photoUrl,
+          "name": encrypter.encryptData(name),
+          "email": encrypter.encryptData(email),
+          "picture": encrypter.encryptData(photoUrl),
           "createdAt": FieldValue.serverTimestamp(),
           "user_id": userCredential.user!.uid
         });

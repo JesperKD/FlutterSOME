@@ -76,9 +76,12 @@ class TimelineView extends StatelessWidget {
                                   leading: CircleAvatar(
                                     radius: 30,
                                     backgroundImage: NetworkImage(
-                                        userSnapshot.data!['picture']!),
+                                        encrypter.decryptData(
+                                            userSnapshot.data!['picture']!)),
                                   ),
-                                  title: Text(userSnapshot.data!['name'],
+                                  title: Text(
+                                      encrypter.decryptData(
+                                          userSnapshot.data!['name']),
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText1!
