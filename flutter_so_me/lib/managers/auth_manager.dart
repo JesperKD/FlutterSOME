@@ -58,7 +58,7 @@ class AuthManager with ChangeNotifier {
         });
         isCreated = true;
       } else {
-        setMessage('Image upload failed!');
+        setMessage('Image upload failed, reset and try again.');
         isCreated = false;
       }
       setIsLoading(false); //set to false
